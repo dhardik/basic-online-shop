@@ -5,6 +5,27 @@ var divListofProducts=document.getElementById("divListofProducts");
 var products=[];
 var targetID;
 
+fetchData();
+
+/* used to fetch previous data from local storage of browser
+ * using JSON */
+function fetchData()
+{
+  var rawData=localStorage.getItem("products");
+  if(rawData)
+  {
+    products=JSON.parse(rawData);
+  }
+  refreshProductList();
+}
+
+/* storing data in localStorage */
+function storeData()
+{
+  var strData=JSON.stringify(products);
+  localStorage.setItem("products",strData);
+}
+
 aAddProduct.addEventListener("click",function(event)
 {
   targetID=-1;
@@ -22,6 +43,7 @@ function insertLine(targetDiv)
 function refreshProductList()
 {
   removeProductsFromDOM();
+  storeData();
   addProductsToDOM();
 }
 
@@ -228,13 +250,50 @@ function createNewProductPanel()
     submitChangesButton.innerHTML="submit changes";
     submitChangesButton.addEventListener("click",function(event)
   {
-    products[targetID].name=document.getElementById("nameInput").value;
-    products[targetID].desc=document.getElementById("descInput").value;
-    products[targetID].price=document.getElementById("priceInput").value;
-    products[targetID].qty=document.getElementById("qtyInput").value;
-    refreshProductList();
-    unhideProductList();
-    removeNewProductPanel();
+    var count=0;
+    if((document.getElementById("nameInput").value)=="")
+    {
+      alert("Enter Product Name");
+    }
+    else
+    {
+      products[targetID].name=document.getElementById("nameInput").value;
+      count++;
+    }
+    if((document.getElementById("nameInput").value)=="")
+    {
+      alert("Enter Product Description");
+    }
+    else
+    {
+      products[targetID].desc=document.getElementById("descInput").value;
+      count++;
+    }
+    if((document.getElementById("priceInput").value)=="")
+    {
+      alert("Enter Product Price");
+    }
+    else
+    {
+      products[targetID].price=document.getElementById("priceInput").value;
+      count++;
+    }
+    if((document.getElementById("qtyInput").value)=="")
+    {
+      alert("Enter Product Quantity");
+    }
+    else
+    {
+      products[targetID].qty=document.getElementById("qtyInput").value;
+      count++;
+    }
+    if(count==4)
+    {
+      alert("Product Update successful");
+      refreshProductList();
+      unhideProductList();
+      removeNewProductPanel();
+    }
   });
     divNewProductPanel.appendChild(submitChangesButton);
   }
